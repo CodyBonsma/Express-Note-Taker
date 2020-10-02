@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const { parse } = require("path");
+const{ v4: uuidv4 } = require("uuid");
 
 
 // PORT setup
@@ -39,6 +40,7 @@ app.post("/api/notes", function(req, res){
     fs.readFile("./db/db.json", "utf-8", function(err, data){
         if(err) throw err;
         const parsedData = JSON.parse(data);
+        req.body.id = uuidv4();
         parsedData.push(req.body);
 
         fs.writeFile("./db/db.json", JSON.stringify(parsedData), "utf-8", (err) => {
@@ -47,15 +49,15 @@ app.post("/api/notes", function(req, res){
         res.json(parsedData);
     })   
 })
-
+// DELETE route on db json notes
 app.delete("/api/notes/:id", function(req,res){
     fs.readFile("./db/db.json", "utf-8", (err, data) => {
         if (err) throw err;
-        const parsedData = JSON.parse(data);
-        parsedData.filter((data) => {
+        const pickled = JSON.parse(data);
+        parsedData = pickled.filter((data) => {
             return data.id != req.params.id
         })
-        fs.writeFile("./db/db.json", JSON.stringify(parsedData), "utf-8", (err) => {
+        fs.writeFile("./db/db.json", JSON.stringify(parsedData), (err) => {
             if (err) throw err;
             res.json(parsedData);
         });

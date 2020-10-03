@@ -33,7 +33,6 @@ console.log("testing this route");
         let parsedData = JSON.parse(data);
         res.send(parsedData);
     })
-//    return res.sendFile(path.join(__dirname, "./db/db.json"));
 });
 // use the POST method to handle the users request and store the users input into the db.json and page
 app.post("/api/notes", function(req, res){
